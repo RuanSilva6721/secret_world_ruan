@@ -19,9 +19,9 @@ const NameModal = ({ onNameSubmit }) => {
             type="text"
             value={name}
             onChange={(e) => setName(e.target.value)}
-            placeholder="Your name"
+            placeholder="Digite o seu nome"
           />
-          <button type="submit">Submit</button>
+          <button type="submit">Iniciar</button>
         </form>
       </div>
     </div>

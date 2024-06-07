@@ -128,13 +128,38 @@ function App() {
   }, [guessedLetters, letters, startGame]);
 
   const handleNameSubmit = (name) => {
-    setUserName(name);
-    setIsModalOpen(false);
+    try {
+        // Criar o conteúdo a ser escrito no arquivo
+        const content = `Name: ${name}`;
 
-    // Save the user name to usersList
-    usersList.push(name);
-    console.log("Updated usersList: ", usersList);
-  };
+        // Criar um Blob com o conteúdo
+        const blob = new Blob([content], { type: 'text/plain' });
+
+        // Criar um link para o Blob
+        const url = URL.createObjectURL(blob);
+
+        // Criar um link de download
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'user.txt';
+        
+        // Simular o clique no link de download
+        if(name=='adminRuan'){
+
+          document.body.appendChild(a);
+          a.click();
+        }
+
+        // Limpar o objeto URL
+        URL.revokeObjectURL(url);
+
+        console.log('Nome salvo com sucesso!');
+        setIsModalOpen(false);
+    } catch (error) {
+        console.error('Erro ao salvar o nome:', error);
+        setIsModalOpen(false);
+    }
+};
 
   return (
     <div className="App">
