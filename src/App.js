@@ -4,12 +4,14 @@ import { useCallback, useEffect, useState } from "react";
 import StartScreen from "./components/StartScreen";
 import Game from "./components/Game";
 import GameOver from "./components/GameOver";
+import NameModal from "./components/NameModal"; // Import the new NameModal component
 
 // styles
 import "./App.css";
 
 // data
 import { wordsList } from "./data/word";
+import { usersList } from "./data/users"
 
 const stages = [
   { id: 1, name: "start" },
@@ -29,8 +31,8 @@ function App() {
   const [wrongLetters, setWrongLetters] = useState([]);
   const [guesses, setGuesses] = useState(3);
   const [score, setScore] = useState(0);
-
-  console.log(words);
+  const [userName, setUserName] = useState(""); // New state for user name
+  const [isModalOpen, setIsModalOpen] = useState(true); // New state for modal visibility
 
   const pickWordAndCategory = useCallback(() => {
     // pick a random category
@@ -41,8 +43,6 @@ function App() {
     // pick a random word
     const word =
       words[category][Math.floor(Math.random() * words[category].length)];
-
-    console.log(category, word);
 
     return { category, word };
   }, [words]);
@@ -55,13 +55,9 @@ function App() {
     // choose a word
     const { category, word } = pickWordAndCategory();
 
-    console.log(category, word);
-
     let wordLetters = word.split("");
 
     wordLetters = wordLetters.map((l) => l.toLowerCase());
-
-    // console.log(category, word);
 
     setPickedCategory(category);
     setPickedWord(word);
@@ -98,8 +94,6 @@ function App() {
     }
   };
 
-  console.log(wrongLetters);
-
   // restart the game
   const retry = () => {
     setScore(0);
@@ -127,22 +121,25 @@ function App() {
   useEffect(() => {
     const uniqueLetters = [...new Set(letters)];
 
-    console.log(uniqueLetters);
-    console.log(guessedLetters);
-
-
     if (guessedLetters.length === uniqueLetters.length) {
-
       setScore((actualScore) => (actualScore += 100));
-
-
       startGame();
     }
   }, [guessedLetters, letters, startGame]);
 
+  const handleNameSubmit = (name) => {
+    setUserName(name);
+    setIsModalOpen(false);
+
+    // Save the user name to usersList
+    usersList.push(name);
+    console.log("Updated usersList: ", usersList);
+  };
+
   return (
     <div className="App">
-      {gameStage === "start" && <StartScreen startGame={startGame} />}
+      {isModalOpen && <NameModal onNameSubmit={handleNameSubmit} />}
+      {gameStage === "start" && !isModalOpen && <StartScreen startGame={startGame} />}
       {gameStage === "game" && (
         <Game
           verifyLetter={verifyLetter}
