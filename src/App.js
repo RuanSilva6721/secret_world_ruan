@@ -32,7 +32,7 @@ function App() {
   const [guesses, setGuesses] = useState(3);
   const [score, setScore] = useState(0);
   const [userName, setUserName] = useState(""); // New state for user name
-  const [isModalOpen, setIsModalOpen] = useState(true); // New state for modal visibility
+  const [isModalOpen, setIsModalOpen] = useState(false); // New state for modal visibility
 
   const pickWordAndCategory = useCallback(() => {
     // pick a random category
